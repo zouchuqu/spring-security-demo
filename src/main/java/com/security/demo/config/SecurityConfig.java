@@ -23,11 +23,4 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //通过内存创建用户名和密码
-        auth.inMemoryAuthentication().withUser("user").password("123456").roles();
-        auth.inMemoryAuthentication().withUser("admin").password("123456").roles();
-    }
-
 }
