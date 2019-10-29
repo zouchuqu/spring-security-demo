@@ -1,8 +1,10 @@
 package com.security.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity//开启Spring Security的功能
+@EnableGlobalMethodSecurity(prePostEnabled=true)//开启方法安全级别的控制
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
     @Bean
@@ -23,11 +26,14 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //通过内存创建用户名和密码
-        auth.inMemoryAuthentication().withUser("user").password("123456").roles();
-        auth.inMemoryAuthentication().withUser("admin").password("123456").roles();
+        //通过内存创建用户名、密码和权限
+        auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder.encode("123456")).roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("user").password(passwordEncoder.encode("123456")).roles("USER");
     }
 
 }
