@@ -4,6 +4,7 @@ import com.security.demo.entity.UserInfo;
 import com.security.demo.repository.UserInfoRepository;
 import com.security.demo.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +18,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * 创建新用户
      *
@@ -25,6 +30,8 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public UserInfo create(UserInfo userInfo) {
+        //对密码加密
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         return userInfoRepository.save(userInfo);
     }
 

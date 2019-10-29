@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  */
 @Component
 @Slf4j
-public class UserInfoServiceImplTest extends SpringSecurityDemoApplicationTests {
+public class UserInfoFormServiceImplTest extends SpringSecurityDemoApplicationTests {
 
     @Autowired
     private UserInfoService userInfoService;
