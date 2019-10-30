@@ -33,16 +33,17 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private RoleInfoService roleInfoService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    /**
+     * 在这个方法中实现用户身份认证和授权
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         log.info("loadUserByUsername->username={}", username);
         UserInfo userInfo = userInfoService.findByUsername(username);
-        log.info("用户信息userInfo={}",userInfo);
-//        log.info("用户密码={}",passwordEncoder.encode(userInfo.getPassword()));
         if (userInfo == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
@@ -56,7 +57,6 @@ public class MyUserDetailsService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + roleInfo.getAuthority()));
         }
         //注意要在创建用户信息的时候密码需要加密
-//        User userDetails = new User(userInfo.getUsername(), passwordEncoder.encode(userInfo.getPassword()), authorities);
         User userDetails = new User(userInfo.getUsername(), userInfo.getPassword(), authorities);
 
         return userDetails;
