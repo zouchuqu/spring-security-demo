@@ -26,6 +26,7 @@ public class HelloSecurityController {
     @GetMapping("/helloUser")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")//访问这个接口需要有 admin或者user 的权限的用户才能访问
     public String user() {
+
         return "Hello,user";
     }
 
