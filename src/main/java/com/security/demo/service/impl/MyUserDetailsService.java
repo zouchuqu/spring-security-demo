@@ -1,10 +1,13 @@
 package com.security.demo.service.impl;
 
+import com.security.demo.entity.RoleInfo;
 import com.security.demo.entity.UserInfo;
+import com.security.demo.service.RoleInfoService;
 import com.security.demo.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,23 +31,32 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserInfoService userInfoService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleInfoService roleInfoService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         log.info("loadUserByUsername->username={}", username);
         UserInfo userInfo = userInfoService.findByUsername(username);
+        log.info("用户信息userInfo={}",userInfo);
+//        log.info("用户密码={}",passwordEncoder.encode(userInfo.getPassword()));
         if (userInfo == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        //暂时不考虑权限
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        //如果在创建用户信息的时候没有加密，这里就需要做加密处理否则会报错
-        // User userDetails = new User(userInfo.getUsername(), passwordEncoder.encode(userInfo.getPassword()), authorities);
 
-        //已经在创建用户信息的时候做了加密处理，这里直接使用即可
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        RoleInfo roleInfo = roleInfoService.findById(userInfo.getRid());
+        log.info("roleInfo={}",roleInfo);
+        if (roleInfo != null) {
+            // 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + roleInfo.getAuthority()));
+        }
+        //注意要在创建用户信息的时候密码需要加密
+//        User userDetails = new User(userInfo.getUsername(), passwordEncoder.encode(userInfo.getPassword()), authorities);
         User userDetails = new User(userInfo.getUsername(), userInfo.getPassword(), authorities);
 
         return userDetails;

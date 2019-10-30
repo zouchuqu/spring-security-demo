@@ -6,23 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 /**
  * @auther kklu
- * @date 2019/9/25 17:46
+ * @date 2019/10/30 10:45
  * @describe
  */
 @Entity
 @Data
-public class UserInfo {
-
+public class RoleInfo {
     @Id//用户id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增
     private Long id;
-    //角色id
-    private Long rid;
-    //用户名
-    private String username;
-    //用户密码
-    private String password;
+    //角色名
+    private String name;
+    //该角色所拥有的权限名称
+    private String authority;
 
 }
