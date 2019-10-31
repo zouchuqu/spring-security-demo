@@ -42,5 +42,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
         http.csrf().disable();// 禁用跨站攻击
     }
-
 }
