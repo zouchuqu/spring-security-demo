@@ -45,6 +45,7 @@ public class MyUserDetailsService implements UserDetailsService {
         log.info("loadUserByUsername->username={}", username);
         UserInfo userInfo = userInfoService.findByUsername(username);
         if (userInfo == null) {
+            log.info("loadUserByUsername->用户不存在={}", "用户不存在");
             throw new UsernameNotFoundException("用户不存在");
         }
 
