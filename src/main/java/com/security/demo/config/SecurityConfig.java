@@ -25,13 +25,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        super.configure(http);
         http.formLogin()
                 .loginPage("/login.html")// 自定义登录页面路径
                 .loginProcessingUrl("/authentication/form")// 自定义页面的登录路径，注意要与登录页面的action值一致，<form action="/authentication/form" method="post">
+                // 登录失败Url
+                .failureUrl("/login/error")
+                .and()
+                .logout().permitAll()
                 .and()
                 .authorizeRequests() // 定义哪些URL需要被保护、哪些不需要被保护
                 .antMatchers("/login.html").permitAll()// 设置所有人都可以访问登录页面
